@@ -1347,6 +1347,35 @@ dependencies = [
 ]
 
 [[package]]
+name = "augment"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "edit_prediction_types",
+ "gpui",
+ "language",
+ "log",
+ "lsp",
+ "serde",
+ "serde_json",
+ "settings",
+]
+
+[[package]]
+name = "augment_ui"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "augment",
+ "gpui",
+ "language",
+ "log",
+ "settings",
+ "ui",
+ "workspace",
+]
+
+[[package]]
 name = "auto_update"
 version = "0.1.0"
 dependencies = [
@@ -20997,6 +21026,8 @@ dependencies = [
  "askpass",
  "assets",
  "audio",
+ "augment",
+ "augment_ui",
  "auto_update",
  "auto_update_ui",
  "bincode",

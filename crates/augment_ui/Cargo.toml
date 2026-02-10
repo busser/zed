@@ -1,0 +1,30 @@
+[package]
+name = "augment_ui"
+version = "0.1.0"
+edition.workspace = true
+publish.workspace = true
+license = "GCP-3.0-or-later"
+
+[lints]
+workspace = true
+
+[lib]
+path = "src/augment_ui.rs"
+doctest = false
+
+[features]
+default = []
+test-support = [
+    "augment/test-support",
+    "gpui/test-support",
+]
+
+[dependencies]
+augment.workspace = true
+gpui.workspace = true
+language.workspace = true
+settings.workspace = true
+ui.workspace = true
+workspace.workspace = true
+log.workspace = true
+anyhow.workspace = true
