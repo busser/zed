@@ -91,6 +91,7 @@ pub enum EditPredictionProvider {
 }
 
 pub const EXPERIMENTAL_ZETA2_EDIT_PREDICTION_PROVIDER_NAME: &str = "zeta2";
+pub const EXPERIMENTAL_AUGMENT_EDIT_PREDICTION_PROVIDER_NAME: &str = "augment";
 
 impl<'de> Deserialize<'de> for EditPredictionProvider {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
@@ -125,6 +126,13 @@ impl<'de> Deserialize<'de> for EditPredictionProvider {
             {
                 EditPredictionProvider::Experimental(
                     EXPERIMENTAL_ZETA2_EDIT_PREDICTION_PROVIDER_NAME,
+                )
+            }
+            Content::Experimental(name)
+                if name == EXPERIMENTAL_AUGMENT_EDIT_PREDICTION_PROVIDER_NAME =>
+            {
+                EditPredictionProvider::Experimental(
+                    EXPERIMENTAL_AUGMENT_EDIT_PREDICTION_PROVIDER_NAME,
                 )
             }
             Content::Experimental(name) => {
@@ -163,6 +171,9 @@ impl EditPredictionProvider {
             EditPredictionProvider::Experimental(
                 EXPERIMENTAL_ZETA2_EDIT_PREDICTION_PROVIDER_NAME,
             ) => Some("Zeta2"),
+            EditPredictionProvider::Experimental(
+                EXPERIMENTAL_AUGMENT_EDIT_PREDICTION_PROVIDER_NAME,
+            ) => Some("Augment"),
             EditPredictionProvider::None | EditPredictionProvider::Experimental(_) => None,
             EditPredictionProvider::Ollama => Some("Ollama"),
         }
@@ -1129,5 +1140,24 @@ mod test {
                 .expect("options were flattened")
                 .contains_key("tabWidth")
         );
+    }
+
+    #[test]
+    fn test_augment_edit_prediction_provider_deserialization() {
+        let raw = "{\"experimental\": \"augment\"}";
+        let provider: EditPredictionProvider = serde_json::from_str(raw).unwrap();
+        assert_eq!(
+            provider,
+            EditPredictionProvider::Experimental(
+                EXPERIMENTAL_AUGMENT_EDIT_PREDICTION_PROVIDER_NAME
+            )
+        )
+    }
+
+    #[test]
+    fn test_unknown_edit_prediction_provider_deserialization() {
+        let raw = "{\"experimental\": \"nonexistent\"}";
+        let result = serde_json::from_str::<EditPredictionProvider>(raw);
+        assert!(result.is_err())
     }
 }
