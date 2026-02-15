@@ -1353,6 +1353,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "edit_prediction_types",
+ "feature_flags",
  "gpui",
  "language",
  "log",
