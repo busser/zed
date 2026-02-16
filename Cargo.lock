@@ -1354,6 +1354,7 @@ dependencies = [
  "anyhow",
  "edit_prediction_types",
  "gpui",
+ "icons",
  "language",
  "log",
  "lsp",

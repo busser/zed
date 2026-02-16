@@ -1,3 +1,4 @@
+use augment::AugmentEditPredictionDelegate;
 use client::{Client, UserStore};
 use codestral::{CodestralEditPredictionDelegate, load_codestral_api_key};
 use collections::HashMap;
@@ -8,7 +9,10 @@ use feature_flags::FeatureFlagAppExt;
 use gpui::{AnyWindowHandle, App, AppContext as _, Context, Entity, WeakEntity};
 use language::language_settings::{EditPredictionProvider, all_language_settings};
 
-use settings::{EXPERIMENTAL_ZETA2_EDIT_PREDICTION_PROVIDER_NAME, SettingsStore};
+use settings::{
+    EXPERIMENTAL_AUGMENT_EDIT_PREDICTION_PROVIDER_NAME,
+    EXPERIMENTAL_ZETA2_EDIT_PREDICTION_PROVIDER_NAME, SettingsStore,
+};
 use std::{cell::RefCell, rc::Rc, sync::Arc};
 use supermaven::{Supermaven, SupermavenEditPredictionDelegate};
 use ui::Window;
@@ -186,6 +190,12 @@ fn assign_edit_prediction_provider(
         EditPredictionProvider::Codestral => {
             let http_client = client.http_client();
             let provider = cx.new(|_| CodestralEditPredictionDelegate::new(http_client));
+            editor.set_edit_prediction_provider(Some(provider), window, cx);
+        }
+        EditPredictionProvider::Experimental(name)
+            if name == EXPERIMENTAL_AUGMENT_EDIT_PREDICTION_PROVIDER_NAME =>
+        {
+            let provider = cx.new(|_| AugmentEditPredictionDelegate);
             editor.set_edit_prediction_provider(Some(provider), window, cx);
         }
         value @ (EditPredictionProvider::Experimental(_)
