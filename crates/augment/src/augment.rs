@@ -4,6 +4,7 @@ use edit_prediction_types::{
 use gpui::{App, Context, Entity};
 use icons::IconName;
 use language::{Anchor, Buffer};
+use std::path::{Path, PathBuf};
 
 pub struct AugmentEditPredictionDelegate;
 
@@ -59,5 +60,29 @@ impl EditPredictionDelegate for AugmentEditPredictionDelegate {
         _cx: &mut Context<Self>,
     ) -> Option<EditPrediction> {
         None
+    }
+}
+
+pub fn resolve_server_path(custom_path: Option<&str>, default_path: &Path) -> PathBuf {
+    custom_path
+        .map(PathBuf::from)
+        .unwrap_or_else(|| default_path.to_path_buf())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_resolve_server_path_uses_default_when_no_custom_path() {
+        let result = resolve_server_path(None, Path::new("/default/server.js"));
+        assert_eq!(result, PathBuf::from("/default/server.js"));
+    }
+
+    #[test]
+    fn test_resolve_server_path_uses_custom_path_when_provided() {
+        let result =
+            resolve_server_path(Some("/custom/server.js"), Path::new("/default/server.js"));
+        assert_eq!(result, PathBuf::from("/custom/server.js"));
     }
 }

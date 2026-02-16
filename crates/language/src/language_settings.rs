@@ -391,6 +391,8 @@ pub struct EditPredictionSettings {
     pub mode: settings::EditPredictionsMode,
     /// Settings specific to GitHub Copilot.
     pub copilot: CopilotSettings,
+    /// Settings specific to Augment.
+    pub augment: AugmentSettings,
     /// Settings specific to Codestral.
     pub codestral: CodestralSettings,
     /// Settings specific to Sweep.
@@ -433,6 +435,12 @@ pub struct CopilotSettings {
     pub enterprise_uri: Option<String>,
     /// Whether the Copilot Next Edit Suggestions feature is enabled.
     pub enable_next_edit_suggestions: Option<bool>,
+}
+
+#[derive(Clone, Debug, Default)]
+pub struct AugmentSettings {
+    /// Path to a custom Augment server bundle (for development).
+    pub server_path: Option<String>,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -685,6 +693,11 @@ impl settings::Settings for AllLanguageSettings {
             enable_next_edit_suggestions: copilot.enable_next_edit_suggestions,
         };
 
+        let augment = edit_predictions.augment.unwrap();
+        let augment_settings = AugmentSettings {
+            server_path: augment.server_path,
+        };
+
         let codestral = edit_predictions.codestral.unwrap();
         let codestral_settings = CodestralSettings {
             model: codestral.model,
@@ -739,6 +752,7 @@ impl settings::Settings for AllLanguageSettings {
                     .collect(),
                 mode: edit_predictions_mode,
                 copilot: copilot_settings,
+                augment: augment_settings,
                 codestral: codestral_settings,
                 sweep: sweep_settings,
                 ollama: ollama_settings,

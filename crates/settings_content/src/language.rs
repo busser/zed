@@ -195,6 +195,8 @@ pub struct EditPredictionSettingsContent {
     pub mode: Option<EditPredictionsMode>,
     /// Settings specific to GitHub Copilot.
     pub copilot: Option<CopilotSettingsContent>,
+    /// Settings specific to Augment.
+    pub augment: Option<AugmentSettingsContent>,
     /// Settings specific to Codestral.
     pub codestral: Option<CodestralSettingsContent>,
     /// Settings specific to Sweep.
@@ -227,6 +229,16 @@ pub struct CopilotSettingsContent {
     ///
     /// Default: true
     pub enable_next_edit_suggestions: Option<bool>,
+}
+
+#[with_fallible_options]
+#[derive(Clone, Debug, Default, Serialize, Deserialize, JsonSchema, MergeFrom, PartialEq)]
+pub struct AugmentSettingsContent {
+    /// Path to a custom Augment server bundle (for development).
+    /// If not set, the server is downloaded automatically.
+    ///
+    /// Default: null
+    pub server_path: Option<String>,
 }
 
 #[with_fallible_options]
