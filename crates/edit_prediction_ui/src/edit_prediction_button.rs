@@ -23,7 +23,9 @@ use language::{
 use project::{DisableAiSettings, Project};
 use regex::Regex;
 use settings::{
-    EXPERIMENTAL_ZETA2_EDIT_PREDICTION_PROVIDER_NAME, Settings, SettingsStore, update_settings_file,
+    EXPERIMENTAL_AUGMENT_EDIT_PREDICTION_PROVIDER_NAME,
+    EXPERIMENTAL_ZETA2_EDIT_PREDICTION_PROVIDER_NAME, Settings, SettingsStore,
+    update_settings_file,
 };
 use std::{
     rc::Rc,
@@ -1476,6 +1478,10 @@ pub fn get_available_providers(cx: &mut App) -> Vec<EditPredictionProvider> {
             EXPERIMENTAL_ZETA2_EDIT_PREDICTION_PROVIDER_NAME,
         ));
     }
+
+    providers.push(EditPredictionProvider::Experimental(
+        EXPERIMENTAL_AUGMENT_EDIT_PREDICTION_PROVIDER_NAME,
+    ));
 
     if let Some(app_state) = workspace::AppState::global(cx).upgrade()
         && copilot::GlobalCopilotAuth::try_get_or_init(app_state, cx)
